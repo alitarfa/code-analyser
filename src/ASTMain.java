@@ -13,10 +13,11 @@ public class ASTMain {
                 "private id owner;\n" +
                 "\n" +
                 "public void getName(){\n" +
+                "isNull();"+
                 "return this.name;\n" +
                 "}\n" +
                 "\n" +
-                "public void isNull() {\n" +
+                "public static void isNull() {\n" +
                 "\n" +
                 "}\n" +
                 "\n" +

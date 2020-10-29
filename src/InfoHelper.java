@@ -1,4 +1,5 @@
 import Types.ClassVisitors;
+import Types.MethodInvocationVisitors;
 import Types.MethodVisitors;
 import Types.VariableVisitors;
 import org.eclipse.jdt.core.dom.*;
@@ -25,9 +26,16 @@ public class InfoHelper {
         methodVisitors
                 .getMethods()
                 .forEach(methodDeclaration -> {
+                    MethodInvocationVisitors methodInvocationVisitors = new MethodInvocationVisitors();
                     Type returnType = methodDeclaration.getReturnType2();
                     SimpleName name = methodDeclaration.getName();
                     System.out.println(returnType + " " + name);
+                    methodDeclaration.accept(methodInvocationVisitors);
+                    methodInvocationVisitors
+                            .getMethods()
+                            .stream().map(MethodInvocation::getName)
+                            .map(simpleName -> name + " method invoke ---> " + simpleName + " method")
+                            .forEach(System.out::println);
                 });
     }
 
