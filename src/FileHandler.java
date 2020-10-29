@@ -10,7 +10,7 @@ import java.util.Objects;
 public class FileHandler {
 
     public static String read(String filePath) throws Exception {
-        Path path = Paths.get("/home/tarfa/MySpace/Tekit/soon-back/target/generated-sources/annotations/soon/io/soon/DTO/catergory/CategoryMapperImpl.java");
+        Path path = Paths.get(filePath);
         try {
             return Files.readString(path);
         } catch (IOException e) {

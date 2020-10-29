@@ -1,10 +1,15 @@
 import Types.ClassVisitors;
 import Types.MethodVisitors;
+import Types.PackageVisitors;
 import Types.VariableVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 public class ClassStatistics {
 
@@ -57,5 +62,33 @@ public class ClassStatistics {
 
         return variableVisitors.getFields()
                 .size();
+    }
+
+    public static int packageCounter(List<File> projectFiles) {
+        PackageVisitors packageVisitors = new PackageVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(packageVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return packageVisitors.getPackages()
+                .size();
+    }
+
+    public static Long lineCounter(List<File> projectFiles) {
+        AtomicLong numberLines = new AtomicLong();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                numberLines.addAndGet(content.lines().count());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+        return numberLines.get();
     }
 }
