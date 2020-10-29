@@ -6,7 +6,6 @@ import org.eclipse.jdt.core.dom.*;
 
 public class InfoHelper {
 
-
     public static void show(ClassVisitors classVisitors) {
         classVisitors.getClasses().forEach(InfoHelper::showClassInfo);
         classVisitors.getClasses().forEach(InfoHelper::showMethodInfo);
