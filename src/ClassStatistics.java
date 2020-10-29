@@ -3,9 +3,11 @@ import Types.MethodVisitors;
 import Types.PackageVisitors;
 import Types.VariableVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -165,6 +167,37 @@ public class ClassStatistics {
                 .stream()
                 .filter(typeDeclaration -> !typeDeclaration.isInterface())
                 .filter(typeDeclaration -> typeDeclaration.getMethods().length > value)
+                .collect(Collectors.toList());
+    }
+
+    public static List<MethodDeclaration> highestNumberOfLineInMethod(List<File> projectFiles) {
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return classVisitors
+                .getClasses()
+                .stream()
+                .filter(typeDeclaration -> !typeDeclaration.isInterface())
+                .map(typeDeclaration -> {
+                    MethodVisitors methodVisitors = new MethodVisitors();
+                    typeDeclaration.accept(methodVisitors);
+                    return methodVisitors
+                            .getMethods()
+                            .stream()
+                            .filter(methodDeclaration -> methodDeclaration.getBody() != null)
+                            .sorted(Comparator.comparingInt(o -> o.getBody().statements().size()))
+                            .limit((long) Math.ceil(10 * methodVisitors.getMethods().size()))
+                            .collect(Collectors.toList());
+                })
+                .flatMap(Collection::stream)
                 .collect(Collectors.toList());
     }
 

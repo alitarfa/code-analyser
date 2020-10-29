@@ -1,3 +1,4 @@
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
@@ -34,6 +35,12 @@ public class ASTMain {
                 .stream()
                 .map(TypeDeclaration::getName)
                 .forEach(System.out::println);
+
+        ClassStatistics.highestNumberOfLineInMethod(projectFiles)
+                .stream()
+                .map(MethodDeclaration::getName)
+                .forEach(System.out::println);
+
     }
 
 }
