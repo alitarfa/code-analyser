@@ -201,4 +201,30 @@ public class ClassStatistics {
                 .collect(Collectors.toList());
     }
 
+
+    public static int numberMaxOfParams(List<File> projectFiles) {
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        MethodVisitors methodVisitors = new MethodVisitors();
+        classVisitors
+                .getClasses()
+                .stream()
+                .filter(typeDeclaration -> !typeDeclaration.isInterface())
+                .forEach(typeDeclaration -> typeDeclaration.accept(methodVisitors));
+
+        return methodVisitors.getMethods()
+                .stream()
+                .map(MethodDeclaration::parameters)
+                .max(Comparator.comparingInt(List::size))
+                .get().size();
+    }
 }

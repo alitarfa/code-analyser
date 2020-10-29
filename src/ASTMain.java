@@ -41,6 +41,8 @@ public class ASTMain {
                 .map(MethodDeclaration::getName)
                 .forEach(System.out::println);
 
+        int i = ClassStatistics.numberMaxOfParams(projectFiles);
+        System.out.println(i);
     }
 
 }
