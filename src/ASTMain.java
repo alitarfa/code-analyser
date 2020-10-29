@@ -7,10 +7,10 @@ public class ASTMain {
     public static void main(String args[]) throws Exception {
 
         List<File> projectFiles = FileHandler.readJavaFiles(new File("/home/tarfa/MySpace/Tekit"));
-        int packages = ClassStatistics.packageCounter(projectFiles);
-        Long classes = ClassStatistics.classCounter(projectFiles);
-        int methods = ClassStatistics.methodCounter(projectFiles);
-        int attributes = ClassStatistics.attributeCounter(projectFiles);
+        long packages = ClassStatistics.packageCounter(projectFiles);
+        long classes = ClassStatistics.classCounter(projectFiles);
+        long methods = ClassStatistics.methodCounter(projectFiles);
+        long attributes = ClassStatistics.attributeCounter(projectFiles);
         Long lines = ClassStatistics.lineCounter(projectFiles);
         System.out.println("Package Count : " + packages);
         System.out.println("Class Count : " + classes);

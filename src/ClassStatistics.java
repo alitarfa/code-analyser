@@ -3,9 +3,6 @@ import Types.MethodVisitors;
 import Types.PackageVisitors;
 import Types.VariableVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.concurrent.atomic.AtomicLong;
 
 public class ClassStatistics {
 
-    public static Long classCounter(List<File> projectFiles) {
+    public static long classCounter(List<File> projectFiles) {
         ClassVisitors classVisitors = new ClassVisitors();
         projectFiles.forEach(file -> {
             try {
@@ -32,7 +29,7 @@ public class ClassStatistics {
                 .count();
     }
 
-    public static int methodCounter(List<File> projectFiles) {
+    public static long methodCounter(List<File> projectFiles) {
         MethodVisitors methodVisitors = new MethodVisitors();
         projectFiles.forEach(file -> {
             try {
@@ -48,7 +45,7 @@ public class ClassStatistics {
                 .size();
     }
 
-    public static int attributeCounter(List<File> projectFiles) {
+    public static long attributeCounter(List<File> projectFiles) {
         VariableVisitors variableVisitors = new VariableVisitors();
         projectFiles.forEach(file -> {
             try {
@@ -64,7 +61,7 @@ public class ClassStatistics {
                 .size();
     }
 
-    public static int packageCounter(List<File> projectFiles) {
+    public static long packageCounter(List<File> projectFiles) {
         PackageVisitors packageVisitors = new PackageVisitors();
         projectFiles.forEach(file -> {
             try {
@@ -91,4 +88,17 @@ public class ClassStatistics {
         });
         return numberLines.get();
     }
+
+    public static double meanNumberMethodsPerClass(List<File> projectFiles) {
+        return (double) methodCounter(projectFiles) / (double) classCounter(projectFiles);
+    }
+
+    public static double meanNumberLinePerMethod(List<File> projectFiles) {
+        return (double) lineCounter(projectFiles) / (double) methodCounter(projectFiles);
+    }
+
+    public static double meanNumberAttributePerClass(List<File> projectFiles) {
+        return (double) attributeCounter(projectFiles) / (double) classCounter(projectFiles);
+    }
+
 }
