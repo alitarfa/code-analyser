@@ -1,3 +1,5 @@
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+
 import java.io.File;
 import java.util.List;
 
@@ -17,6 +19,21 @@ public class ASTMain {
         System.out.println("Methods Count : " + methods);
         System.out.println("Attribute Count : " + attributes);
         System.out.println("Line Count : " + lines);
+
+        ClassStatistics.highestNumberMethod(projectFiles)
+                .stream()
+                .map(TypeDeclaration::getName)
+                .forEach(System.out::println);
+
+        ClassStatistics.highestNumberAttribute(projectFiles)
+                .stream()
+                .map(TypeDeclaration::getName)
+                .forEach(System.out::println);
+
+        ClassStatistics.findClassesHaveMoreThan(projectFiles, 5)
+                .stream()
+                .map(TypeDeclaration::getName)
+                .forEach(System.out::println);
     }
 
 }

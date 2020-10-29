@@ -3,10 +3,13 @@ import Types.MethodVisitors;
 import Types.PackageVisitors;
 import Types.VariableVisitors;
 import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import java.io.File;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+import java.util.stream.Collectors;
 
 public class ClassStatistics {
 
@@ -99,6 +102,70 @@ public class ClassStatistics {
 
     public static double meanNumberAttributePerClass(List<File> projectFiles) {
         return (double) attributeCounter(projectFiles) / (double) classCounter(projectFiles);
+    }
+
+    public static List<TypeDeclaration> highestNumberMethod(List<File> projectFiles) {
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return classVisitors
+                .getClasses()
+                .stream()
+                .filter(typeDeclaration -> !typeDeclaration.isInterface())
+                .sorted(Comparator.comparingInt(o -> o.getMethods().length))
+                .limit((long) Math.ceil(10 * classVisitors.getClasses().size()))
+                .collect(Collectors.toList());
+    }
+
+    public static List<TypeDeclaration> highestNumberAttribute(List<File> projectFiles) {
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return classVisitors
+                .getClasses()
+                .stream()
+                .filter(typeDeclaration -> !typeDeclaration.isInterface())
+                .sorted(Comparator.comparingInt(o -> o.getFields().length))
+                .limit((long) Math.ceil(10 * classVisitors.getClasses().size()))
+                .collect(Collectors.toList());
+    }
+
+
+    public static List<TypeDeclaration> findClassesHaveMoreThan(List<File> projectFiles, int value) {
+
+        ClassVisitors classVisitors = new ClassVisitors();
+        projectFiles.forEach(file -> {
+            try {
+                String content = FileHandler.read(file.getAbsolutePath());
+                CompilationUnit result = ParserFactory.getInstance(content);
+                result.accept(classVisitors);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+
+        return classVisitors
+                .getClasses()
+                .stream()
+                .filter(typeDeclaration -> !typeDeclaration.isInterface())
+                .filter(typeDeclaration -> typeDeclaration.getMethods().length > value)
+                .collect(Collectors.toList());
     }
 
 }
