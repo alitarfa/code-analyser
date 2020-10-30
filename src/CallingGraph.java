@@ -2,16 +2,15 @@ import Types.ClassVisitors;
 import Types.MethodInvocationVisitors;
 import Types.MethodVisitors;
 import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.SimpleName;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class CallingGraph {
 
     private Set<Map.Entry<String, String>> entries = new HashSet<>();
-    private Map<String, String> map = new HashMap<>();
-    private Set<String> nodes = new TreeSet<>();
 
     public Set<Map.Entry<String, String>> generateGraph(ClassVisitors classVisitors) {
         classVisitors.getClasses()
@@ -33,7 +32,7 @@ public class CallingGraph {
                                                 invoked = typeDeclaration.getName() + "::" + methodInvocation.getName().toString();
                                             }
 
-                                            entries.add(Map.entry(typeDeclaration.getName() + "::" + nameMethod.toString(),invoked));
+                                            entries.add(Map.entry(typeDeclaration.getName() + "::" + nameMethod.toString(), invoked));
                                         });
                             });
 
