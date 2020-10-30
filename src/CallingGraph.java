@@ -30,9 +30,9 @@ public class CallingGraph {
                                             Expression expr = methodInvocation.getExpression();
                                             String invoked = "";
                                             if (expr != null) {
-                                                invoked = expr + "::" + methodDeclaration.getName().toString();
+                                                invoked = expr + "::" + methodInvocation.getName().toString();
                                             } else {
-                                                invoked = typeDeclaration.getName() + "::" + methodDeclaration.getName().toString();
+                                                invoked = typeDeclaration.getName() + "::" + methodInvocation.getName().toString();
                                             }
                                             map.put(typeDeclaration.getName() + "::" + nameMethod.toString(), invoked);
 
